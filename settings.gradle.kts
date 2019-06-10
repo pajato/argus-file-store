@@ -7,7 +7,8 @@ pluginManagement {
         }
     }
 }
-rootProject.name = 'argus-file-store'
+rootProject.name = "argus-file-store"
 
+include(":argus-file-store")
 
-enableFeaturePreview('GRADLE_METADATA')
+enableFeaturePreview("GRADLE_METADATA")
