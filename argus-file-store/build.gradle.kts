@@ -16,14 +16,25 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(kotlin("stdlib-common"))
-                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.10.0")
                 implementation("org.jetbrains.kotlin:kotlin-reflect")
+                implementation("com.pajato.argus:argus-tmdb-core:${Versions.ARGUS_CORE}")
+                implementation("com.pajato.io:KFile-metadata:0.0.2")
             }
         }
         commonTest {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test-common")
                 implementation("org.jetbrains.kotlin:kotlin-test-annotations-common")
+                implementation("com.pajato.argus:argus-tmdb-core:${Versions.ARGUS_CORE}")
+                //implementation("com.pajato.io:KFile:0.0.2")
+                //implementation( "com.pajato.argus:argus-tmdb-core-metadata:${Versions.ARGUS_CORE}")
+            }
+        }
+        jvm("jvm").compilations["main"].defaultSourceSet {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-test")
+                implementation("org.jetbrains.kotlin:kotlin-test-junit")
+                implementation("com.pajato.io:KFile-jvm:0.0.2")
             }
         }
         jvm("jvm").compilations["test"].defaultSourceSet {
