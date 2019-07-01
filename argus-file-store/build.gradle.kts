@@ -1,13 +1,18 @@
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
 import groovy.util.Node
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     kotlin("multiplatform")
-    //id("kotlinx-serialization")
+    id("kotlinx-serialization")
     jacoco
     id("maven-publish")
     signing
+}
+
+tasks.withType<KotlinCompile>().all {
+    kotlinOptions.freeCompilerArgs += "-Xuse-experimental=kotlin.Experimental"
 }
 
 kotlin {
@@ -18,7 +23,8 @@ kotlin {
                 implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlin:kotlin-reflect")
                 implementation("com.pajato.argus:argus-tmdb-core:${Versions.ARGUS_CORE}")
-                implementation("com.pajato.io:KFile-metadata:0.0.2")
+                implementation("com.pajato.io:KFile:${Versions.KFILE}")
+                implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:${Versions.SERIALIZATION}")
             }
         }
         commonTest {
@@ -26,15 +32,13 @@ kotlin {
                 implementation("org.jetbrains.kotlin:kotlin-test-common")
                 implementation("org.jetbrains.kotlin:kotlin-test-annotations-common")
                 implementation("com.pajato.argus:argus-tmdb-core:${Versions.ARGUS_CORE}")
-                //implementation("com.pajato.io:KFile:0.0.2")
-                //implementation( "com.pajato.argus:argus-tmdb-core-metadata:${Versions.ARGUS_CORE}")
             }
         }
         jvm("jvm").compilations["main"].defaultSourceSet {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-test")
                 implementation("org.jetbrains.kotlin:kotlin-test-junit")
-                implementation("com.pajato.io:KFile-jvm:0.0.2")
+                implementation("com.pajato.io:KFile-jvm:${Versions.KFILE}")
             }
         }
         jvm("jvm").compilations["test"].defaultSourceSet {

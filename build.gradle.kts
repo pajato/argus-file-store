@@ -2,12 +2,13 @@
 
 plugins {
     kotlin("multiplatform") version Versions.KOTLIN apply false
-    //id("kotlinx-serialization") version Versions.KOTLIN apply false
+    id("kotlinx-serialization") version Versions.KOTLIN apply false
 }
 
 allprojects {
     repositories {
         jcenter()
+        mavenLocal()
     }
 
     tasks.register("cleanProject") {

@@ -2,6 +2,8 @@ package com.pajato.argus.store
 
 import com.pajato.tmdb.core.Movie
 import com.pajato.io.KFile
+import com.pajato.tmdb.core.TmdbData
+import com.pajato.tmdb.core.TmdbError
 
 abstract class Persister {
     abstract fun create(id: String, json: String)
@@ -9,7 +11,7 @@ abstract class Persister {
     abstract fun delete(id: String)
 }
 
-fun String.toMovie(): Movie = Movie.create(this) as Movie
+fun String.toMovie(): TmdbData = try { Movie.create(this) } catch (exc: Exception) { TmdbError("Invalid JSON: $this") }
 
 expect class Store(dir: String, name: String) : Persister {
     //expect val file: KFile
