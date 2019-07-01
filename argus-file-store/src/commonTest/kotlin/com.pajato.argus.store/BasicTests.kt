@@ -1,18 +1,18 @@
 package com.pajato.argus.store
 
-import com.pajato.io.createKotlinFile
-import com.pajato.tmdb.core.Movie
-import com.pajato.tmdb.core.toTmdbData
+import kotlinx.serialization.UnstableDefault
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
 expect fun getBuildDir(): String
 
+@UnstableDefault
 class BasicTests {
 
     private val dir = getBuildDir()
-    private val store = Store(dir, "store")
+    private val testStoreName = "store"
+    private var store = Store(dir, testStoreName)
 
     @Test
     fun `create update and remove a movie`() {
@@ -20,32 +20,43 @@ class BasicTests {
         store.repo.clear()
         assertEquals(0, store.repo.size, "Repo has wrong size!")
         val errorMessage = "The store has the wrong number of lines!"
-        val creationJson = """{"adult":true,"id":6,"original_title":"Maix","popularity":3.1,"video":true}"""
-        val movie = creationJson.toTmdbData(Movie.listName) as Movie
-        store.create(movie.id.toString(10), creationJson)
+        var id = "6"
+        var creationJson = """{"adult":true,"id":$id,"original_title":"Matrix","popularity":3.1,"video":true}"""
+        store.create(id, creationJson)
         assertEquals(1, store.file.readLines().size, errorMessage)
         assertEquals(1, store.repo.size, "Repo has wrong size!")
 
-        val updateJson = """{"adult":true,"id":6,"original_title":"Maix","popularity":3.6,"video":true}"""
-        store.update(movie.id.toString(10), updateJson)
+        val updateJson = """{"adult":true,"id":$id,"original_title":"Maix","popularity":3.6,"video":true}"""
+        store.update(id, updateJson)
         assertEquals(2, store.file.readLines().size, errorMessage)
         assertEquals(1, store.repo.size, "Repo has wrong size!")
 
-        store.delete(movie.id.toString())
+        store.delete(id)
         assertEquals(3, store.file.readLines().size, errorMessage)
         assertEquals(0, store.repo.size, "Repo has wrong size!")
 
+        store.create(id, creationJson)
+        id = "27"
+        creationJson = """{"adult":true,"id":$id,"original_title":"Matrix","popularity":3.1,"video":true}"""
+        store.create("7", creationJson)
         store.file.close()
-        val newStore = Store(dir, "store")
-        assertEquals(3, newStore.file.readLines().size, "New store has incorrect number of lines!")
-        assertEquals(0, newStore.repo.size, "New store has wrong size!")
+        store = Store(dir, testStoreName)
+        assertEquals(2, store.file.readLines().size, "New store has incorrect number of lines!")
+        assertEquals(2, store.repo.size, "New store has wrong size!")
 
         // Throw some exceptions.
-        assertFailsWith(IllegalArgumentException::class) { newStore.create("abc", "") }
-        //val badStore = createKotlinFile(dir, "bad_store")
-        //badStore.appendText("\n")
-        //assertFailsWith(IllegalArgumentException::class) { Store(dir, "bad_store") }
-        //assertFailsWith(Exception::class) { Store("", "").file.readLines() }
+        assertFailsWith(IllegalArgumentException::class) { store.create("abc", "") }
+        id = "23"
+        creationJson = """{"adult":true,"id":$id,"original_title":"Matrix","popularity":3.1,"video":true}foo"""
+        assertFailsWith(IllegalArgumentException::class) { store.create(id, creationJson) }
+
+        // Create some invalid json for coverage
+        store.file.clear()
+        store.file.appendText("create 23 ${creationJson}update 23 ${creationJson}")
+        store.file.close()
+        store = Store(dir, testStoreName)
+        assertEquals(0, store.file.readLines().size, "Bad store has incorrect number of lines!")
+        assertEquals(0, store.repo.size, "Bad store has wrong size!")
     }
 
 }
