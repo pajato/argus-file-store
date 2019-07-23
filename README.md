@@ -11,4 +11,4 @@ The current Kotlin multi-platform release is JVM only.
 
 For JVM: "com.pajato.argus:argus-file-store-jvm:0.0.3"
 
-See [Testing](Reports/tests/allTests/index.html) and [Coverage](Reports/coverage/index.html) reports.
+See [Testing](https://github.com/pajato/argus-file-store/Reports/tests/allTests/index.html) and [Coverage](https://github.com/pajato/argus-file-store/Reports/coverage/index.html) reports.
