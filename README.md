@@ -6,5 +6,9 @@ library usage.
 
 The persistence model is known as journaling transactions, transaction logging and System Prevalence (see Wikepedia:
  https://en.wikipedia.org/wiki/System_prevalence)
- 
- 
+
+The current Kotlin multi-platform release is JVM only.
+
+For JVM: "com.pajato.argus:argus-file-store-jvm:0.0.3"
+
+See [Testing](Reports/tests/allTests/index.html) and [Coverage](Reports/coverage/index.html) reports.
